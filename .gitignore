@@ -1,0 +1,17 @@
+**/Debug/*
+**/Release/*
+**/obj/*
+**/bin/*
+Misc/*
+Old/*
+*.cachefile
+*.ncb
+*.sdf
+*.suo
+*.pdb
+*.vcproj.*
+*.vcproj.*.user
+*.vcxproj.user
+*.csproj.user
+*.opensdf
+*.EXE

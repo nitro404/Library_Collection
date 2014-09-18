@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\Utilities\Utilities.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Settings Manager\SettingsManager.cpp">
+      <Filter>Settings Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Variable System\Variable.cpp">
+      <Filter>Variable System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Variable System\VariableCollection.cpp">
+      <Filter>Variable System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Variable System">
+      <UniqueIdentifier>{6bbcfce5-08a3-41ab-833f-926c7a19cb91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Settings Manager">
+      <UniqueIdentifier>{0484abfe-095e-4065-bbf5-92816f1c9307}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{a1505c42-047e-44d2-8fd0-b16ee29d2f92}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Utilities\Utilities.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Settings Manager\SettingsManager.h">
+      <Filter>Settings Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Variable System\Variable.h">
+      <Filter>Variable System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Variable System\VariableCollection.h">
+      <Filter>Variable System</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
