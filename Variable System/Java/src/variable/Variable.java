@@ -1,3 +1,5 @@
+package variable;
+
 import java.io.*;
 
 public class Variable {

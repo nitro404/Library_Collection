@@ -1,7 +1,9 @@
+package variable;
+
 import java.util.*;
 import java.io.*;
 
-public class VariableSystem {
+public class VariableCollection {
 	
 	/** The collection of Variable objects. */
 	private Vector<Variable> m_variables;
@@ -11,7 +13,7 @@ public class VariableSystem {
 	
 	
 	/** Constructs an empty VariableSystem object with a default size of 10. */
-	public VariableSystem() {
+	public VariableCollection() {
 		m_variables = new Vector<Variable>();
 		m_categories = new Vector<String>();
 	}
@@ -423,7 +425,7 @@ public class VariableSystem {
 	 * 
 	 * @param v the collection of Variables to add (merge) into the current VariableSystem. 
 	 */
-	public void add(VariableSystem v) {
+	public void add(VariableCollection v) {
 		if(v == null) { return; }
 		
 		// loop through all of the variables in the specified Variables collection and add them to the current collection
@@ -792,7 +794,7 @@ public class VariableSystem {
 	 * @param fileName the name of the file to be parsed into a collection of variables.
 	 * @return a collection of Variables read from the specified file.
 	 */
-	public static VariableSystem readFrom(String fileName) {
+	public static VariableCollection readFrom(String fileName) {
 		if(fileName == null) { return null; }
 		return readFrom(new File(fileName));
 	}
@@ -803,10 +805,10 @@ public class VariableSystem {
 	 * @param file the file to be parsed into a collection of Variables.
 	 * @return a collection of Variables read from the specified file.
 	 */
-	public static VariableSystem readFrom(File file) {
+	public static VariableCollection readFrom(File file) {
 		if(file == null || !file.exists() || !file.isFile()) { return null; }
 		
-		VariableSystem variables;
+		VariableCollection variables;
 		
 		BufferedReader in;
 		String input, data;
@@ -815,7 +817,7 @@ public class VariableSystem {
 			// open the file
 			in = new BufferedReader(new FileReader(file));
 			
-			variables = new VariableSystem();
+			variables = new VariableCollection();
 			String category = null;
 			int categoryIndex = Variable.NO_CATEGORY;
 			
@@ -914,9 +916,9 @@ public class VariableSystem {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) {
-		if(o == null || !(o instanceof VariableSystem)) { return false; }
+		if(o == null || !(o instanceof VariableCollection)) { return false; }
 		
-		VariableSystem v = (VariableSystem) o;
+		VariableCollection v = (VariableCollection) o;
 		
 		// check the size of each collection of Variables
 		if(m_variables.size() != m_variables.size()) { return false; }
