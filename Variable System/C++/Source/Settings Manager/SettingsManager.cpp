@@ -66,7 +66,7 @@ bool SettingsManager::saveTo(const char * fileName) const {
 
 
 	// group the variables by categories
-	m_variables->sort();
+	m_variables->sortVariables();
 
 	// update the settings file with the changes
 	return m_variables->writeTo(fileName);

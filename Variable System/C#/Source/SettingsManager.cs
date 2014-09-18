@@ -9,10 +9,10 @@ namespace Variable_System {
 
 		private static string m_defaultFileName = "settings.ini";
 
-		private VariableSystem m_variables;
+		private VariableCollection m_variables;
 
 		public SettingsManager() {
-			m_variables = new VariableSystem();
+			m_variables = new VariableCollection();
 			reset();
 		}
 
@@ -24,14 +24,18 @@ namespace Variable_System {
 			get { return m_defaultFileName; }
 		}
 
-		public bool load() { return loadFrom(m_defaultFileName); }
+		public bool load() {
+			return loadFrom(m_defaultFileName);
+		}
 
-		public bool save() { return saveTo(m_defaultFileName); }
+		public bool save() {
+			return saveTo(m_defaultFileName);
+		}
 
 		// load game settings from a specified file name
 		public bool loadFrom(string fileName) {
 			// use a variable system to parse the settings file
-			VariableSystem newVariables = VariableSystem.readFrom(fileName);
+			VariableCollection newVariables = VariableCollection.readFrom(fileName);
 			if(newVariables == null) { return false; }
 
 			m_variables = newVariables;
@@ -47,7 +51,7 @@ namespace Variable_System {
 			
 
 			// group the variables by categories
-			m_variables.sort();
+			m_variables.sortVariables();
 
 			// update the settings file with the changes
 			return m_variables.writeTo(fileName);

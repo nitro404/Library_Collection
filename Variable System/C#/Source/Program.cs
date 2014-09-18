@@ -9,7 +9,9 @@ namespace Variable_System {
 
 		static void Main(string[] args) {
 			SettingsManager settings = new SettingsManager();
+
 			settings.load();
+
 			settings.save();
 		}
 

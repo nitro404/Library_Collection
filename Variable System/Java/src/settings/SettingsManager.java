@@ -17,9 +17,13 @@ public class SettingsManager {
 		
 	}
 	
-	public boolean load() { return loadFrom(defaultSettingsFileName); }
+	public boolean load() {
+		return loadFrom(defaultSettingsFileName);
+	}
 	
-	public boolean save() { return saveTo(defaultSettingsFileName); }
+	public boolean save() {
+		return saveTo(defaultSettingsFileName);
+	}
 	
 	public boolean loadFrom(String fileName) {
 		VariableCollection variables = VariableCollection.readFrom(fileName);

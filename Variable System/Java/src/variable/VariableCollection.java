@@ -19,24 +19,28 @@ public class VariableCollection {
 	}
 	
 	/**
-	 * Adds a category and returns the index of it after it is added (or the index of it if it already exists).
+	 * Returns the number of categories.
 	 * 
-	 * @param category the name of the category to be added.
-	 * @return the index of the category, after it was added.
+	 * @return number of categories.
 	 */
-	public int addCategory(String category) {
-		if(category == null) { return Variable.NO_CATEGORY; }
-		String temp = category.trim();
-		if(category.length() == 0) { return Variable.NO_CATEGORY; }
+	public int numberOfCategories() {
+		return m_categories.size();
+	}
+	
+	public boolean hasCategory(String category) {
+		if(category == null || category.length() == 0 || m_categories.size() == 0) { return false; }
+		
+		String formattedCategory = category.trim();
+		
+		if(formattedCategory.length() == 0) { return false; }
 		
 		for(int i=0;i<m_categories.size();i++) {
-			if(temp.equalsIgnoreCase(m_categories.elementAt(i))) {
-				return i;
+			if(formattedCategory.equalsIgnoreCase(m_categories.elementAt(i))) {
+				return true;
 			}
 		}
-		
-		m_categories.add(temp);
-		return m_categories.size() - 1;
+
+		return false;
 	}
 
 	/**
@@ -46,21 +50,20 @@ public class VariableCollection {
 	 * @return the index of the category, if it was found.
 	 */
 	public int indexOfCategory(String category) {
-		if(category == null || m_categories.size() == 0) { return Variable.NO_CATEGORY; }
+		if(category == null || category.length() == 0 || m_categories.size() == 0) { return -1; }
 		
-		String temp = category.trim();
+		String formattedCategory = category.trim();
 		
-		if(temp.length() == 0) { return Variable.NO_CATEGORY; }
+		if(formattedCategory.length() == 0) { return -1; }
 		
 		for(int i=0;i<m_categories.size();i++) {
-			if(temp.equalsIgnoreCase(m_categories.elementAt(i))) {
+			if(formattedCategory.equalsIgnoreCase(m_categories.elementAt(i))) {
 				return i;
 			}
 		}
 
-		return Variable.NO_CATEGORY;
+		return -1;
 	}
-
 	
 	/**
 	 * Returns the name of a category at the specified index.
@@ -68,17 +71,64 @@ public class VariableCollection {
 	 * @param index the index of the category to be retrieved.
 	 * @return the name of a category at the specified index.
 	 */
-	public String categoryAt(int index) {
+	public String getCategory(int index) {
 		if(index < 0 || index >= m_categories.size()) { return null; }
+		
 		return m_categories.elementAt(index);
 	}
+	
+	/**
+	 * Adds a category and returns the index of it after it is added (or the index of it if it already exists).
+	 * 
+	 * @param category the name of the category to be added.
+	 * @return the index of the category, after it was added.
+	 */
+	public int addCategory(String category) {
+		if(category == null || category.length() == 0) { return Variable.NO_CATEGORY; }
+		
+		String formattedCategory = category.trim();
+		
+		if(formattedCategory.length() == 0) { return Variable.NO_CATEGORY; }
+		
+		for(int i=0;i<m_categories.size();i++) {
+			if(formattedCategory.equalsIgnoreCase(m_categories.elementAt(i))) {
+				return i;
+			}
+		}
+		
+		m_categories.add(formattedCategory);
+		
+		return m_categories.size() - 1;
+	}
 
+	/**
+	 * Removes the specified category and any variables associated with it.
+	 * 
+	 * @param data the name of the category to be removed.
+	 */
+	public void removeCategory(String category) {
+		if(category == null || category.length() == 0) { return; }
+		
+		String formattedCategory = category.trim();
+		
+		if(formattedCategory.length() == 0) { return; }
+
+		int categoryIndex = indexOfCategory(formattedCategory);
+
+		for(int i=0;i<m_variables.size();i++) {
+			if(m_variables.elementAt(i).getCategory() == categoryIndex) {
+				m_variables.remove(i);
+				i--;
+			}
+		}
+	}
+	
 	/**
 	 * Returns the number of Variable objects stored within the collection of Variables.
 	 * 
 	 * @return the number of Variable objects stored within the collection of Variables.
 	 */
-	public int size() {
+	public int numberOfVariables() {
 		return m_variables.size();
 	}
 
@@ -88,14 +138,16 @@ public class VariableCollection {
 	 * @param id the id to be matched.
 	 * @return true if a Variable with an id matching the specified parameter is found.
 	 */
-	public boolean contains(String id) {
-		if(id == null) { return false; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return false; }
+	public boolean hasVariable(String id) {
+		if(id == null || id.length() == 0) { return false; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return false; }
 		
 		// loop through and check to see if any variables contain a matching id
 		for(int i=0;i<m_variables.size();i++) {
-			if(m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			if(m_variables.elementAt(i).getID().equalsIgnoreCase(formattedID)) {
 				return true;
 			}
 		}
@@ -110,17 +162,19 @@ public class VariableCollection {
 	 * @param category the name of the category the Variable belongs to.
 	 * @return true if a Variable with an id matching the specified parameters is found.
 	 */
-	public boolean contains(String id, String category) {
-		if(id == null || category == null) { return false; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return false; }
+	public boolean hasVariable(String id, String category) {
+		if(id == null || id.length() == 0) { return false; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return false; }
 		
 		int categoryIndex = indexOfCategory(category);
 		
 		// loop through and check to see if any variables contain a matching id
 		for(int i=0;i<m_variables.size();i++) {
-			if(categoryIndex == m_variables.elementAt(i).getCategory() &&
-			   m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			if(m_variables.elementAt(i).getCategory() == categoryIndex &&
+			   m_variables.elementAt(i).getID().equalsIgnoreCase(formattedID)) {
 				return true;
 			}
 		}
@@ -134,7 +188,7 @@ public class VariableCollection {
 	 * @param v the Variable to be matched.
 	 * @return true if a matching Variable is found within the collection of Variables.
 	 */
-	public boolean contains(Variable v) {
+	public boolean hasVariable(Variable v) {
 		if(v == null) { return false; }
 		
 		// loop through and search for a Variable matching the corresponding parameter
@@ -154,14 +208,16 @@ public class VariableCollection {
 	 * @param id the id to be matched.
 	 * @return the index of the Variable matching the specified id if it exists, otherwise returns -1.
 	 */
-	public int indexOf(String id) {
-		if(id == null) { return -1; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return -1; }
+	public int indexOfVariable(String id) {
+		if(id == null || id.length() == 0) { return -1; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return -1; }
 		
 		// loop through and check to see if any variables contain a matching id
 		for(int i=0;i<m_variables.size();i++) {
-			if(m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			if(m_variables.elementAt(i).getID().equalsIgnoreCase(formattedID)) {
 				return i;
 			}
 		}
@@ -176,17 +232,19 @@ public class VariableCollection {
 	 * @param category the name of the category the Variable belongs to.
 	 * @return the index of the Variable matching the specified id and category if it exists, otherwise returns -1.
 	 */
-	public int indexOf(String id, String category) {
-		if(id == null) { return -1; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return -1; }
+	public int indexOfVariable(String id, String category) {
+		if(id == null || id.length() == 0) { return -1; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return -1; }
 		
 		int categoryIndex = indexOfCategory(category);
 		
 		// loop through and check to see if any variables contain a matching id
 		for(int i=0;i<m_variables.size();i++) {
 			if(m_variables.elementAt(i).getCategory() == categoryIndex &&
-			   m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			   m_variables.elementAt(i).getID().equalsIgnoreCase(formattedID)) {
 				return i;
 			}
 		}
@@ -200,7 +258,7 @@ public class VariableCollection {
 	 * @param v the Variable to be matched.
 	 * @return the index of the Variable matching the specified Variable if it exists, otherwise returns -1.
 	 */
-	public int indexOf(Variable v) {
+	public int indexOfVariable(Variable v) {
 		if(v == null) { return -1; }
 		
 		// loop through and search for a Variable matching the corresponding parameter
@@ -220,7 +278,7 @@ public class VariableCollection {
 	 * @param index the index of the Variable to be returned.
 	 * @return the Variable located at the specified index, otherwise returns null if the index is out of range or there are no elements.
 	 */
-	public Variable variableAt(int index) {
+	public Variable getVariable(int index) {
 		if(index < 0 || index >= m_variables.size()) { return null; }
 		
 		// return the Variable at the specified index if the index is within the boundaries of the collection of Variables
@@ -234,13 +292,15 @@ public class VariableCollection {
 	 * @return the Variable matching the corresponding id if it exists in the collection of Variables, otherwise returns null.
 	 */
 	public Variable getVariable(String id) {
-		if(id == null) { return null; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return null; }
+		if(id == null || id.length() == 0) { return null; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return null; }
 		
 		// loop through and check to see if any variables contain a matching id, if one exists then return the value of the corresponding Variable
 		for(int i=0;i<m_variables.size();i++) {
-			if(m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			if(m_variables.elementAt(i).getID().equalsIgnoreCase(formattedID)) {
 				return m_variables.elementAt(i);
 			}
 		}
@@ -256,16 +316,18 @@ public class VariableCollection {
 	 * @return the Variable matching the corresponding id and category if it exists in the collection of Variables, otherwise returns null.
 	 */
 	public Variable getVariable(String id, String category) {
-		if(id == null) { return null; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return null; }
+		if(id == null || id.length() == 0) { return null; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return null; }
 		
 		int categoryIndex = indexOfCategory(category);
 		
 		// loop through and check to see if any variables contain a matching id, if one exists then return the value of the corresponding Variable
 		for(int i=0;i<m_variables.size();i++) {
 			if(m_variables.elementAt(i).getCategory() == categoryIndex &&
-			   m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			   m_variables.elementAt(i).getID().equalsIgnoreCase(formattedID)) {
 				return m_variables.elementAt(i);
 			}
 		}
@@ -280,13 +342,15 @@ public class VariableCollection {
 	 * @return the value of a Variable matching the corresponding id if it exists in the collection of Variables, otherwise returns null.
 	 */
 	public String getValue(String id) {
-		if(id == null) { return null; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return null; }
+		if(id == null || id.length() == 0) { return null; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return null; }
 		
 		// loop through and check to see if any variables contain a matching id, if one exists then return the value of the corresponding Variable
 		for(int i=0;i<m_variables.size();i++) {
-			if(m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			if(m_variables.elementAt(i).getID().equalsIgnoreCase(formattedID)) {
 				return m_variables.elementAt(i).getValue();
 			}
 		}
@@ -302,16 +366,18 @@ public class VariableCollection {
 	 * @return the value of a Variable matching the corresponding id and category if it exists in the collection of Variables, otherwise returns null.
 	 */
 	public String getValue(String id, String category) {
-		if(id == null) { return null; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return null; }
+		if(id == null || id.length() == 0) { return null; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return null; }
 		
 		int categoryIndex = indexOfCategory(category);
 		
 		// loop through and check to see if any variables contain a matching id, if one exists then return the value of the corresponding Variable
 		for(int i=0;i<m_variables.size();i++) {
 			if(m_variables.elementAt(i).getCategory() == categoryIndex &&
-			   m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			   m_variables.elementAt(i).getID().equalsIgnoreCase(formattedID)) {
 				return m_variables.elementAt(i).getValue();
 			}
 		}
@@ -326,112 +392,18 @@ public class VariableCollection {
 	 * @return a collection of Variable objects associated with the specified category.
 	 */
 	public Vector<Variable> getVariablesInCategory(String category) {
-		if(category == null) { return null; }
-
 		int categoryIndex = indexOfCategory(category);
 
 		Vector<Variable> variableCollection = new Vector<Variable>();
 
 		// collect all variables in the specified category
 		for(int i=0;i<m_variables.size();i++) {
-			if(categoryIndex == m_variables.elementAt(i).getCategory()) {
+			if(m_variables.elementAt(i).getCategory() == categoryIndex) {
 				variableCollection.add(m_variables.elementAt(i));
 			}
 		}
 		
 		return variableCollection;
-	}
-	
-	/**
-	 * Creates and adds a Variable object to the collection of Variables.
-	 * 
-	 * @param id the id of the Variable to be created.
-	 * @param value the value of the Variable to be created.
-	 * @return true if the Variable is valid and not already contained within the collection of Variables.
-	 */
-	public boolean add(String id, String value) {
-		if(id == null || value == null) { return false; }
-		if(!contains(id, "")) {
-			m_variables.add(new Variable(id, value, Variable.NO_CATEGORY));
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Creates and adds a Variable object to the collection of Variables.
-	 * 
-	 * @param id the id of the Variable to be created.
-	 * @param value the value of the Variable to be created.
-	 * @param category the name of the category associated with the Variable.
-	 * @return true if the Variable is valid and not already contained within the collection of Variables.
-	 */
-	public boolean add(String id, String value, String category) {
-		if(id == null || value == null || category == null) { return false; }
-		if(!contains(id, category)) {
-			int categoryIndex = addCategory(category);
-			m_variables.add(new Variable(id, value, categoryIndex));
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Adds a Variable object to the collection of Variables.
-	 * 
-	 * @param v the Variable to be added to the collection of Variables.
-	 * @return true if the Variable is valid and not already contained within the collection of Variables.
-	 */
-	public boolean add(Variable v) {
-		// verify that the Variable is valid and not already contained in the Variables collection, then add it
-		if(v == null || v.getID().length() == 0) { return false; }
-		if(!contains(v) && v.getCategory() < m_categories.size()) {
-			m_variables.add(v);
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Adds (merges) a Vector of Variable objects into the current collection.
-	 * 
-	 * @param v a Vector of Variable objects to add (merge) into the current Variables collection.
-	 */
-	public void add(Variable[] v) {
-		if(v == null) { return; }
-		
-		// loop through all of the variables in the specified Vector of Variable objects and add them to the current collection
-		for(int i=0;i<v.length;i++) {
-			add(v[i]);
-		}
-	}
-	
-	/**
-	 * Adds (merges) a Vector of Variable objects into the current collection.
-	 * 
-	 * @param v a Vector of Variable objects to add (merge) into the current Variables collection.
-	 */
-	public void add(Vector<Variable> v) {
-		if(v == null) { return; }
-		
-		// loop through all of the variables in the specified Vector of Variable objects and add them to the current collection
-		for(int i=0;i<v.size();i++) {
-			add(v.elementAt(i));
-		}
-	}
-
-	/**
-	 * Adds (merges) another VariableSystem into the current collection.
-	 * 
-	 * @param v the collection of Variables to add (merge) into the current VariableSystem. 
-	 */
-	public void add(VariableCollection v) {
-		if(v == null) { return; }
-		
-		// loop through all of the variables in the specified Variables collection and add them to the current collection
-		for(int i=0;i<v.m_variables.size();i++) {
-			add(v.m_variables.elementAt(i));
-		}
 	}
 	
 	/**
@@ -441,22 +413,24 @@ public class VariableCollection {
 	 * @param value the value to update the Variable with.
 	 */
 	public void setValue(String id, String value) {
-		if(id == null || value == null) { return; }
-		String temp = id.trim();
-		if(id.length() == 0) { return; }
+		if(id == null || id.length() == 0) { return; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return; }
 		
 		boolean valueUpdated = false;
 		
 		for(int i=0;i<m_variables.size();i++) {
-			if(temp.equalsIgnoreCase(m_variables.elementAt(i).getID())) {
-				m_variables.elementAt(i).setValue(value);
+			if(formattedID.equalsIgnoreCase(m_variables.elementAt(i).getID())) {
+				m_variables.elementAt(i).setValue(value == null ? "" : value);
 				valueUpdated = true;
 			}
 		}
 
 		// if the variable doesn't exist, add it
 		if(!valueUpdated) {
-			add(id, value);
+			addVariable(id, value);
 		}
 	}
 	
@@ -558,22 +532,24 @@ public class VariableCollection {
 	 * @param category the name of the category associated with the Variable.
 	 */
 	public void setValue(String id, String value, String category) {
-		if(id == null || value == null || category == null) { return; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return; }
+		if(id == null || id.length() == 0) { return; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return; }
 
 		int categoryIndex = indexOfCategory(category);
 		
 		for(int i=0;i<m_variables.size();i++) {
-			if(categoryIndex == m_variables.elementAt(i).getCategory() &&
-			   temp.equalsIgnoreCase(m_variables.elementAt(i).getID())) {
-				m_variables.elementAt(i).setValue(value);
+			if(m_variables.elementAt(i).getCategory() == categoryIndex &&
+				formattedID.equalsIgnoreCase(m_variables.elementAt(i).getID())) {
+				m_variables.elementAt(i).setValue(value == null ? "" : value);
 				return;
 			}
 		}
 
 		// if the variable doesn't exist, add it
-		add(id, value, category);
+		addVariable(id, value, category);
 	}
 
 	/**
@@ -665,14 +641,119 @@ public class VariableCollection {
 	}
 	
 	/**
+	 * Creates and adds a Variable object to the collection of Variables.
+	 * 
+	 * @param id the id of the Variable to be created.
+	 * @param value the value of the Variable to be created.
+	 * @return true if the Variable is valid and not already contained within the collection of Variables.
+	 */
+	public boolean addVariable(String id, String value) {
+		if(id == null || id.length() == 0) { return false; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return false; }
+		
+		if(!hasVariable(formattedID)) {
+			m_variables.add(new Variable(formattedID, value, Variable.NO_CATEGORY));
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Creates and adds a Variable object to the collection of Variables.
+	 * 
+	 * @param id the id of the Variable to be created.
+	 * @param value the value of the Variable to be created.
+	 * @param category the name of the category associated with the Variable.
+	 * @return true if the Variable is valid and not already contained within the collection of Variables.
+	 */
+	public boolean addVariable(String id, String value, String category) {
+		if(id == null || id.length() == 0) { return false; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return false; }
+		
+		if(!hasVariable(formattedID, category)) {
+			int categoryIndex = addCategory(category);
+			m_variables.add(new Variable(formattedID, value, categoryIndex));
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Adds a Variable object to the collection of Variables.
+	 * 
+	 * @param v the Variable to be added to the collection of Variables.
+	 * @return true if the Variable is valid and not already contained within the collection of Variables.
+	 */
+	public boolean addVariable(Variable v) {
+		// verify that the Variable is valid and not already contained in the Variables collection, then add it
+		if(v == null || v.getID().length() == 0) { return false; }
+		
+		if(!hasVariable(v) && v.getCategory() < m_categories.size()) {
+			m_variables.add(v);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Adds (merges) a Vector of Variable objects into the current collection.
+	 * 
+	 * @param v a Vector of Variable objects to add (merge) into the current Variables collection.
+	 */
+	public void addVariables(Variable[] v) {
+		if(v == null) { return; }
+		
+		// loop through all of the variables in the specified Vector of Variable objects and add them to the current collection
+		for(int i=0;i<v.length;i++) {
+			addVariable(v[i]);
+		}
+	}
+	
+	/**
+	 * Adds (merges) a Vector of Variable objects into the current collection.
+	 * 
+	 * @param v a Vector of Variable objects to add (merge) into the current Variables collection.
+	 */
+	public void addVariables(Vector<Variable> v) {
+		if(v == null) { return; }
+		
+		// loop through all of the variables in the specified Vector of Variable objects and add them to the current collection
+		for(int i=0;i<v.size();i++) {
+			addVariable(v.elementAt(i));
+		}
+	}
+
+	/**
+	 * Adds (merges) another VariableSystem into the current collection.
+	 * 
+	 * @param v the collection of Variables to add (merge) into the current VariableSystem. 
+	 */
+	public void addVariables(VariableCollection v) {
+		if(v == null) { return; }
+		
+		// loop through all of the variables in the specified Variables collection and add them to the current collection
+		for(int i=0;i<v.m_variables.size();i++) {
+			addVariable(v.m_variables.elementAt(i));
+		}
+	}
+	
+	/**
 	 * Removes a Variable located at a specified index.
 	 * 
 	 * @param index the index from which to remove a Variable.
 	 * @return true if the Variable was successfully removed from the Variables collection.
 	 */
-	public boolean remove(int index) {
+	public boolean removeVariable(int index) {
 		if(index < 0 || index >= m_variables.size()) { return false; }
+		
 		m_variables.remove(index);
+		
 		return true;
 	}
 	
@@ -682,14 +763,16 @@ public class VariableCollection {
 	 * @param id the id of the variable to remove.
 	 * @return true if the Variable was located and removed from the collection of Variables.
 	 */
-	public boolean remove(String id) {
-		if(id == null) { return false; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return false; }
+	public boolean removeVariable(String id) {
+		if(id == null || id.length() == 0) { return false; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return false; }
 		
 		// loop through and check to see if any variables contain a matching id, and remove the corresponding Variable if one is found
 		for(int i=0;i<m_variables.size();i++) {
-			if(m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			if(m_variables.elementAt(i).getID().equalsIgnoreCase(formattedID)) {
 				m_variables.remove(i);
 				return true;
 			}
@@ -705,17 +788,19 @@ public class VariableCollection {
 	 * @param category the name of the category associated with the Variable.
 	 * @return true if the Variable was located and removed from the collection of Variables.
 	 */
-	public boolean remove(String id, String category) {
-		if(id == null) { return false; }
-		String temp = id.trim();
-		if(temp.length() == 0) { return false; }
+	public boolean removeVariable(String id, String category) {
+		if(id == null || id.length() == 0) { return false; }
+		
+		String formattedID = id.trim();
+		
+		if(formattedID.length() == 0) { return false; }
 		
 		int categoryIndex = indexOfCategory(category);
 		
 		// loop through and check to see if any variables contain a matching id, and remove the corresponding Variable if one is found
 		for(int i=0;i<m_variables.size();i++) {
-			if(categoryIndex == m_variables.elementAt(i).getCategory() &&
-			   m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			if(m_variables.elementAt(i).getCategory() == categoryIndex &&
+			   m_variables.elementAt(i).getID().equalsIgnoreCase(formattedID)) {
 				m_variables.remove(i);
 				return true;
 			}
@@ -730,15 +815,13 @@ public class VariableCollection {
 	 * @param v the Variable to be removed.
 	 * @return true if the Variable was located and removed from the collection of Variables.
 	 */
-	public boolean remove(Variable v) {
-		if(v == null) { return false; }
-		String temp = v.getID().trim();
-		if(temp.length() == 0) { return false; }
+	public boolean removeVariable(Variable v) {
+		if(v == null || v.getID().length() == 0) { return false; }
 		
 		// loop through and check to see if any variables contain a matching id, and remove the corresponding Variable if one is found
 		for(int i=0;i<m_variables.size();i++) {
 			if(v.getCategory() == m_variables.elementAt(i).getCategory() &&
-			   m_variables.elementAt(i).getID().equalsIgnoreCase(temp)) {
+			   m_variables.elementAt(i).getID().equalsIgnoreCase(v.getID())) {
 				m_variables.remove(i);
 				return true;
 			}
@@ -748,44 +831,85 @@ public class VariableCollection {
 	}
 	
 	/**
-	 * Removes the specified category and any variables associated with it.
-	 * 
-	 * @param data the name of the category to be removed.
-	 */
-	public void removeCategory(String data) {
-		if(data == null) { return; }
-		String category = data.trim();
-
-		int categoryIndex = indexOfCategory(category);
-
-		for(int i=0;i<m_variables.size();i++) {
-			if(categoryIndex == m_variables.elementAt(i).getCategory()) {
-				m_variables.remove(i);
-				i--;
-			}
-		}
-	}
-	
-	/**
 	 * Clears the current collection of Variables.
 	 */
-	public void clear() {
+	public void clearVariables() {
 		m_variables.clear();
 		m_categories.clear();
 	}
 	
-	// group all variables together based on their categories
+	/**
+	 * Groups all Variables together based on their categories.
+	 */
 	public void sort() {
-		Variable temp;
-		for(int i=0;i<m_variables.size();i++) {
-			for(int j=i;j<m_variables.size();j++) {
-				if(m_variables.elementAt(i).getCategory() > m_variables.elementAt(j).getCategory()) {
-					temp = m_variables.elementAt(i);
-					m_variables.set(i, m_variables.elementAt(j));
-					m_variables.set(j, temp);
-				}
+		m_variables = mergeSortVariables(m_variables);
+	}
+	
+	/**
+	 * Merge sorts all Variables based on categories.
+	 * 
+	 * @param variables a collection of variables to be sorted.
+	 * @return a sorted copy of the variable collection.
+	 */
+	private static Vector<Variable> mergeSortVariables(Vector<Variable> variables) {
+		if(variables.size() <= 1) {
+			Vector<Variable> newVariables = new Vector<Variable>();
+			if(variables.size() > 0) {
+				newVariables.add(variables.elementAt(0));
+			}
+			
+			return newVariables;
+		}
+
+		Vector<Variable> left = new Vector<Variable>();
+		Vector<Variable> right = new Vector<Variable>();
+
+		int mid = variables.size() / 2;
+
+		for(int i=0;i<mid;i++) {
+			left.add(variables.elementAt(i));
+		}
+
+		for(int i=mid;i<variables.size();i++) {
+			right.add(variables.elementAt(i));
+		}
+
+		left = mergeSortVariables(left);
+		right = mergeSortVariables(right);
+
+		return mergeVariables(left, right);
+	}
+	
+	/**
+	 * Merges two collections together.
+	 * 
+	 * @param left the left half of the collection to be merged.
+	 * @param left the right half of the collection to be merged.
+	 * @return a merged copy of the two collections.
+	 */
+	private static Vector<Variable> mergeVariables(Vector<Variable> left, Vector<Variable> right) {
+		Vector<Variable> result = new Vector<Variable>();
+
+		while(left.size() > 0 && right.size() > 0) {
+			if(left.elementAt(0).getCategory() <= right.elementAt(0).getCategory()) {
+				result.add(left.elementAt(0));
+				left.remove(0);
+			}
+			else {
+				result.add(right.elementAt(0));
+				right.remove(0);
 			}
 		}
+
+		for(int i=0;i<left.size();i++) {
+			result.add(left.elementAt(i));
+		}
+
+		for(int i=0;i<right.size();i++) {
+			result.add(right.elementAt(i));
+		}
+
+		return result;
 	}
 	
 	/**
@@ -840,7 +964,7 @@ public class VariableCollection {
 					Variable v = Variable.parseFrom(data);
 					if(v != null) {
 						v.setCategory(categoryIndex);
-						variables.add(v);
+						variables.addVariable(v);
 					}
 				}
 			}
@@ -925,7 +1049,7 @@ public class VariableCollection {
 		
 		// verify that each Variable in the current collection is also in the other collection of Variables
 		for(int i=0;i<m_variables.size();i++) {
-			if(!v.contains(m_variables.elementAt(i))) {
+			if(!v.hasVariable(m_variables.elementAt(i))) {
 				return false;
 			}
 		}
