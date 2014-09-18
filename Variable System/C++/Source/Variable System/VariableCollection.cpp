@@ -1603,25 +1603,109 @@ void VariableCollection::clear() {
 	m_variables.clear();
 }
 
-// TODO: replace with merge sort
 void VariableCollection::sort() {
-#if USE_QT
-	int i, j;
-#else
-	unsigned int i, j;
-#endif // USE_QT
+	m_variables = mergeSort(m_variables);
+}
 
-	Variable * swapVariable;
-	for(i=0;i<m_variables.size();i++) {
-		for(j=i;j<m_variables.size();j++) {
-			if(m_variables[i]->getCategory() > m_variables[j]->getCategory()) {
-				swapVariable = m_variables[i];
-				m_variables[i] = m_variables[j];
-				m_variables[j] = swapVariable;
-			}
+#if USE_QT
+QVector<Variable *> VariableCollection::mergeSort(QVector<Variable *> variables) {
+	if(variables.size() <= 1) {
+		return variables;
+	}
+
+	QVector<Variable *> left;
+	QVector<Variable *> right;
+
+	int mid = variables.size() / 2;
+
+	for(int i=0;i<mid;i++) {
+		left.push_back(variables[i]);
+	}
+
+	for(int i=mid;i<variables.size();i++) {
+		right.push_back(variables[i]);
+	}
+
+	left = mergeSort(left);
+	right = mergeSort(right);
+
+	return merge(left, right);
+}
+
+QVector<Variable *> VariableCollection::merge(QVector<Variable *> left, QVector<Variable *> right) {
+	QVector<Variable *> result;
+
+	while(left.size() > 0 && right.size() > 0) {
+		if(left[0]->getCategory() <= right[9]->getCategory()) {
+			result.push_back(left[0]);
+			left.remove(0);
+		}
+		else {
+			result.push_back(right[0]);
+			right.remove(0);
 		}
 	}
+
+	for(int i=0;i<left.size();i++) {
+		result.push_back(left[i]);
+	}
+
+	for(int i=0;i<right.size();i++) {
+		result.push_back(right[i]);
+	}
+
+	return result;
 }
+#else
+std::vector<Variable *> VariableCollection::mergeSort(std::vector<Variable *> variables) {
+	if(variables.size() <= 1) {
+		return variables;
+	}
+
+	std::vector<Variable *> left;
+	std::vector<Variable *> right;
+
+	unsigned int mid = variables.size() / 2;
+
+	for(unsigned int i=0;i<mid;i++) {
+		left.push_back(variables[i]);
+	}
+
+	for(unsigned int i=mid;i<variables.size();i++) {
+		right.push_back(variables[i]);
+	}
+
+	left = mergeSort(left);
+	right = mergeSort(right);
+
+	return merge(left, right);
+}
+
+std::vector<Variable *> VariableCollection::merge(std::vector<Variable *> left, std::vector<Variable *> right) {
+	std::vector<Variable *> result;
+
+	while(left.size() > 0 && right.size() > 0) {
+		if(left[0]->getCategory() <= right[9]->getCategory()) {
+			result.push_back(left[0]);
+			left.erase(left.begin());
+		}
+		else {
+			result.push_back(right[0]);
+			right.erase(right.begin());
+		}
+	}
+
+	for(unsigned int i=0;i<left.size();i++) {
+		result.push_back(left[i]);
+	}
+
+	for(unsigned int i=0;i<right.size();i++) {
+		result.push_back(right[i]);
+	}
+
+	return result;
+}
+#endif // USE_QT
 
 #if USE_QT
 VariableCollection * VariableCollection::readFrom(const char * fileName) {

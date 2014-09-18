@@ -27,14 +27,14 @@ public class SettingsManager {
 		m_settings = variables;
 		
 		// create local variables instantiated with data parsed from the variable system
-		// TODO
+		
 		
 		return true;
 	}
 	
 	public boolean saveTo(String fileName) {
 		// update the variable system with the new settings values
-		// TODO
+		
 		
 		// group the settings by categories
 		m_settings.sort();

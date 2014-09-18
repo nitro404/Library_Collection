@@ -176,6 +176,15 @@ public:
 
 private:
 #if USE_QT
+	static QVector<Variable *> mergeSort(QVector<Variable *> variables);
+	static QVector<Variable *> merge(QVector<Variable *> left, QVector<Variable *> right);
+#else
+	static std::vector<Variable *> mergeSort(std::vector<Variable *> variables);
+	static std::vector<Variable *> merge(std::vector<Variable *> left, std::vector<Variable *> right);
+#endif
+
+private:
+#if USE_QT
 	QVector<Variable *> m_variables;
 	QVector<char *> m_categories;
 #else
