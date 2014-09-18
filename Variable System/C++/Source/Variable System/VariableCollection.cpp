@@ -1636,7 +1636,7 @@ QVector<Variable *> VariableCollection::merge(QVector<Variable *> left, QVector<
 	QVector<Variable *> result;
 
 	while(left.size() > 0 && right.size() > 0) {
-		if(left[0]->getCategory() <= right[9]->getCategory()) {
+		if(left[0]->getCategory() <= right[0]->getCategory()) {
 			result.push_back(left[0]);
 			left.remove(0);
 		}
@@ -1685,7 +1685,7 @@ std::vector<Variable *> VariableCollection::merge(std::vector<Variable *> left, 
 	std::vector<Variable *> result;
 
 	while(left.size() > 0 && right.size() > 0) {
-		if(left[0]->getCategory() <= right[9]->getCategory()) {
+		if(left[0]->getCategory() <= right[0]->getCategory()) {
 			result.push_back(left[0]);
 			left.erase(left.begin());
 		}
