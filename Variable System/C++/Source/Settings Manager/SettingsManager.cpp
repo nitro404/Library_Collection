@@ -55,11 +55,13 @@ bool SettingsManager::loadFrom(const QString & fileName) {
 
 	return loadFrom(fileNameBytes.data());
 }
-#else
+#endif // USE_QT
+
+#if USE_STL
 bool SettingsManager::loadFrom(const std::string & fileName) {
 	return loadFrom(fileName.data());
 }
-#endif // USE_QT
+#endif // USE_STL
 
 bool SettingsManager::saveTo(const char * fileName) const {
 	// update the variable system with the new game settings values
@@ -78,8 +80,10 @@ bool SettingsManager::saveTo(const QString & fileName) const {
 
 	return saveTo(fileNameBytes.data());
 }
-#else
+#endif // USE_QT
+
+#if USE_STL
 bool SettingsManager::saveTo(const std::string & fileName) const {
 	return saveTo(fileName.data());
 }
-#endif // USE_QT
+#endif // USE_STL

@@ -6,7 +6,7 @@ const char Utilities::newLine[] = "\r\n";
 const char Utilities::newLine[] = "\r";
 #else
 const char Utilities::newLine[] = "\n";
-#endif
+#endif // _WIN32
 
 unsigned int Utilities::stringLength(const char * s) {
 	return s == NULL ? 0 : strlen(s);
@@ -96,7 +96,7 @@ char * Utilities::trimCopyString(const char * data) {
 	return newData;
 }
 
-#if !USE_QT
+#if USE_STL
 std::string Utilities::trimString(const std::string & data) {
 	if(data.empty()) { return std::string(); }
 
@@ -123,7 +123,7 @@ std::string Utilities::trimString(const std::string & data) {
 
 	return data.substr(start, end - start);
 }
-#endif // !USE_QT
+#endif // USE_STL
 
 char * Utilities::substring(const char * data, int start, int end) {
 	if(data == NULL || start > end) { return NULL; }
@@ -163,7 +163,9 @@ QString Utilities::substring(const QString & data, int start, int end) {
 
 	return data.mid(startPos, endPos - startPos);
 }
-#else
+#endif // USE_QT
+
+#if USE_STL
 std::string Utilities::substring(const std::string & data, int start, int end) {
 	if(data.empty() || start > end) { return std::string(); }
 
@@ -172,7 +174,7 @@ std::string Utilities::substring(const std::string & data, int start, int end) {
 
 	return data.substr(startPos, endPos - startPos);
 }
-#endif // USE_QT
+#endif // USE_STL
 
 int Utilities::compareStrings(const char * s1, const char * s2, bool caseSensitive) {
 	if(s1 == NULL && s2 == NULL) { return 0; }
