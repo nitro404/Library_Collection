@@ -28,7 +28,16 @@ namespace Utilities {
 	void randomSeed(unsigned int seed);
 	int randomInteger(int min, int max, bool randomize = false);
 	float randomFloat(float min, float max, bool randomize = false);
+	int charLength(char n);
+	int unsignedCharLength(unsigned char n);
+	int shortLength(short n);
+	int unsignedShortLength(unsigned short n);
 	int intLength(int n);
+	int unsignedIntLength(int n);
+	int longLength(long n);
+	int unsignedLongLength(unsigned long n);
+	int longLongLength(long long n);
+	int unsignedLongLongLength(unsigned long long n);
 	unsigned int stringLength(const char * s);
 	const char * toString(int value);
 	const char * toString(double value);
