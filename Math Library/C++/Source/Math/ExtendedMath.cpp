@@ -1,3 +1,4 @@
+#include <math.h>
 #include "Math/ExtendedMath.h"
 
 namespace Math {
@@ -62,5 +63,4 @@ namespace Math {
 		return (value - min) / (max - min);
 	}
 
-	
 }
