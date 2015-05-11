@@ -4,16 +4,25 @@
     <Filter Include="Utilities">
       <UniqueIdentifier>{1a665662-868f-4d6b-8d82-a96c9a21d913}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{f0276f2d-98d5-4718-817e-02621969d93f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Utilities\Utilities.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Test\Test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Utilities\Utilities.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Test\Test.h">
+      <Filter>Test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
