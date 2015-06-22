@@ -9,7 +9,7 @@ public:
 	SettingsManager();
 	SettingsManager(const SettingsManager & s);
 	SettingsManager & operator = (const SettingsManager & s);
-	~SettingsManager();
+	virtual ~SettingsManager();
 	
 	void reset();
 	
